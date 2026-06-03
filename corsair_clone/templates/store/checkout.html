@@ -1,0 +1,116 @@
+{% extends 'store/base.html' %}
+{% block title %}Checkout - Corsair Clone{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="section-header" style="margin-bottom: 40px;">
+    <span class="eyebrow">Billing & Shipping</span>
+    <h1>Checkout</h1>
+  </div>
+  
+  {% if error %}
+    <div style="background: rgba(255, 68, 68, 0.1); border: 1px solid rgba(255, 68, 68, 0.3); border-radius: 12px; padding: 16px; color: #ff6b6b; margin-bottom: 32px; font-weight: 700;">
+      {{ error }}
+    </div>
+  {% endif %}
+  
+  <form action="{% url 'store:place_order' %}" method="post">
+    {% csrf_token %}
+    <div class="checkout-grid">
+      <div class="checkout-card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 24px; color: var(--accent);">Shipping Information</h2>
+        
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="full_name" value="{{ initial.full_name|default:'' }}" required placeholder="John Doe">
+        </div>
+        
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" value="{{ initial.email|default:'' }}" required placeholder="john@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" value="{{ initial.phone|default:'' }}" required placeholder="+1 (555) 000-0000">
+        </div>
+        
+        <div class="form-group">
+          <label>Street Address</label>
+          <textarea name="address" required placeholder="123 Main St, Apt 4B" style="min-height: 80px;">{{ initial.address|default:'' }}</textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" value="{{ initial.city|default:'' }}" required placeholder="New York">
+          </div>
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" name="state" value="{{ initial.state|default:'' }}" required placeholder="NY">
+          </div>
+          <div class="form-group">
+            <label>Pincode / ZIP</label>
+            <input type="text" name="pincode" value="{{ initial.pincode|default:'' }}" required placeholder="10001">
+          </div>
+        </div>
+        
+        <h2 style="font-size: 1.5rem; margin-top: 40px; margin-bottom: 24px; color: var(--accent);">Payment Method</h2>
+        <div class="payment-methods">
+          <label>
+            <input type="radio" name="payment_method" value="cod" {% if not initial.payment_method or initial.payment_method == 'cod' %}checked{% endif %}>
+            <span>Cash On Delivery (COD)</span>
+          </label>
+          <label>
+            <input type="radio" name="payment_method" value="upi" {% if initial.payment_method == 'upi' %}checked{% endif %}>
+            <span>UPI / Netbanking</span>
+          </label>
+          <label>
+            <input type="radio" name="payment_method" value="card" {% if initial.payment_method == 'card' %}checked{% endif %}>
+            <span>Credit / Debit Card</span>
+          </label>
+        </div>
+      </div>
+      
+      <div>
+        <div class="order-summary-card">
+          <h2 style="margin-top: 0; margin-bottom: 24px; font-size: 1.5rem;">Order Review</h2>
+          
+          <ul class="order-items-list">
+            {% for item in items %}
+              <li class="order-item-row">
+                <span class="item-name">{{ item.quantity }} x {{ item.product.name }}</span>
+                <span class="item-price">${{ item.total_price }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+          
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+            <p style="display: flex; justify-content: space-between; color: var(--muted); margin: 0;">
+              <span>Subtotal</span>
+              <span>${{ subtotal|floatformat:2 }}</span>
+            </p>
+            <p style="display: flex; justify-content: space-between; color: var(--muted); margin: 0;">
+              <span>Estimated Tax (10%)</span>
+              <span>${{ tax|floatformat:2 }}</span>
+            </p>
+            <p style="display: flex; justify-content: space-between; color: var(--muted); margin: 0;">
+              <span>Shipping</span>
+              <span>{% if shipping == 0 %}Free{% else %}${{ shipping|floatformat:2 }}{% endif %}</span>
+            </p>
+          </div>
+          
+          <h3 style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px; margin-top: 18px; margin-bottom: 28px; color: var(--accent); font-size: 1.4rem;">
+            <span>Total</span>
+            <span>${{ grand_total|floatformat:2 }}</span>
+          </h3>
+          
+          <button class="btn btn-primary" type="submit" style="display: flex; width: 100%;">Place Order</button>
+          <div style="text-align: center; margin-top: 16px;">
+            <a href="{% url 'store:cart' %}" style="color: var(--muted); font-size: 0.9rem;">Back to Cart</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

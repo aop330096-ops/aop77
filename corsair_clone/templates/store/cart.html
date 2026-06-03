@@ -1,0 +1,71 @@
+{% extends 'store/base.html' %}
+{% block title %}Your Cart - Corsair Clone{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="section-header" style="margin-bottom: 40px;">
+    <span class="eyebrow">Shopping Cart</span>
+    <h1>Your Gear Selection</h1>
+  </div>
+  
+  {% if items %}
+    <div style="display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 40px;">
+      <div>
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 16px;">
+                    <img src="{{ media_url }}{{ item.product.image }}" alt="{{ item.product.name }}" style="width:80px; height:80px; border-radius: 12px; object-fit: cover;">
+                    <a href="{% url 'store:product_detail' item.product.slug %}" style="font-weight: 700;">{{ item.product.name }}</a>
+                  </div>
+                </td>
+                <td style="font-weight: 500;">${{ item.product.price }}</td>
+                <td>
+                  <form action="{% url 'store:update_cart_item' item.id %}" method="post" style="display: flex; align-items: center; gap: 10px; margin: 0;">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
+                    <button class="btn btn-secondary" type="submit" style="min-height: 36px; padding: 0 12px; font-size: 0.85rem; border-radius: 8px;">Update</button>
+                  </form>
+                </td>
+                <td style="font-weight: 700; color: var(--accent);">${{ item.total_price }}</td>
+                <td>
+                  <a class="btn btn-secondary" href="{% url 'store:remove_from_cart' item.id %}" style="min-height: 36px; padding: 0 12px; font-size: 0.85rem; border-radius: 8px; border-color: rgba(255,0,0,0.3); color: #ff5555; background: rgba(255,0,0,0.05);">Remove</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <div>
+        <div class="cart-summary">
+          <h2 style="margin-top: 0; margin-bottom: 24px; font-size: 1.5rem;">Order Summary</h2>
+          <p><span>Subtotal</span> <span>${{ subtotal|floatformat:2 }}</span></p>
+          <p><span>Estimated Tax (10%)</span> <span>${{ tax|floatformat:2 }}</span></p>
+          <p><span>Shipping</span> <span>{% if shipping == 0 %}Free{% else %}${{ shipping|floatformat:2 }}{% endif %}</span></p>
+          <h3><span>Total</span> <span>${{ grand_total|floatformat:2 }}</span></h3>
+          <a class="btn btn-primary" href="{% url 'store:checkout' %}" style="display: flex; width: 100%; margin-top: 24px;">Proceed to Checkout</a>
+          <div style="text-align: center; margin-top: 16px;">
+            <a href="{% url 'store:product_list' %}" style="color: var(--muted); font-size: 0.9rem;">Continue Shopping</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: var(--radius);">
+      <p style="color: var(--muted); font-size: 1.2rem; margin-bottom: 24px;">Your cart is currently empty.</p>
+      <a href="{% url 'store:product_list' %}" class="btn btn-primary">Explore Products</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

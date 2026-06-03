@@ -1,0 +1,35 @@
+{% extends "store/base.html" %}
+
+{% block title %}Sign Up · Corsair Clone{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Create account</p>
+        <h1>Sign up for a new account</h1>
+        <p class="page-intro">Register with your email to start shopping and save preferences.</p>
+    </div>
+</section>
+
+<section class="auth-section auth-section--single">
+    {% if error %}
+    <div class="form-error">{{ error }}</div>
+    {% endif %}
+    <div class="auth-card auth-card--signup-form">
+        <h2>Create account</h2>
+        <form class="auth-form" action="{% url 'store:signup' %}" method="post">
+            {% csrf_token %}
+            <label>
+                Email address
+                <input type="email" name="email" placeholder="you@example.com">
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" placeholder="Create password">
+            </label>
+            <button type="submit" class="btn btn-primary">Sign up</button>
+        </form>
+        <p class="muted">Already have an account? <a href="{% url 'store:user_login' %}">Sign in</a></p>
+    </div>
+</section>
+{% endblock %}

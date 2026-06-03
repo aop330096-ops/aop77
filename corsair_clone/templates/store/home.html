@@ -1,0 +1,119 @@
+{% extends "store/base.html" %}
+
+{% block title %}Home · Corsair Clone{% endblock %}
+
+{% block content %}
+<section class="hero-panel hero-banner">
+    <div class="hero-copy">
+        <p class="eyebrow">Elite gaming hardware</p>
+        <h1>Powering your next-level battlestation with precision and style.</h1>
+        <p class="hero-lead">Premium performance components shaped for speed, durability, and low-latency control.</p>
+        <div class="hero-actions">
+            <a href="{% url 'store:product_list' %}" class="btn btn-primary">Shop Now</a>
+            <a href="#trending" class="btn btn-secondary">Trending</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'store:login_choice' %}" class="btn btn-outline">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="hero-visual hero-banner-image">
+        {% if hero_product %}
+        <div class="hero-image-card">
+            <img src="{{ media_url }}{{ hero_product.image }}" alt="{{ hero_product.name }}">
+            <div class="hero-image-copy">
+                <span class="hero-badge">{{ hero_product.name }}</span>
+                <p>{{ hero_product.description }}</p>
+                <a href="{% url 'store:product_detail' slug=hero_product.slug %}" class="btn btn-card">View Product</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="trending-section" id="trending">
+    <div class="section-header">
+        <span class="eyebrow">Trending components</span>
+        <h2>Top computer components catching fire this season.</h2>
+    </div>
+    <div class="trending-grid">
+        {% for product in trending_products %}
+        <article class="trend-card">
+            <div class="trend-image-wrap">
+                <img src="{{ media_url }}{{ product.image }}" alt="{{ product.name }}">
+            </div>
+            <div class="trend-copy">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <span class="badge-chip">Trending</span>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="highlight-section">
+    <div class="section-header">
+        <span class="eyebrow">Prebuilt desktop highlights</span>
+        <h2>Premium system builds optimized for gaming and productivity.</h2>
+    </div>
+    <div class="highlight-grid">
+        {% for product in desktop_highlights %}
+        <article class="highlight-card">
+            <div class="highlight-image-wrap">
+                <img src="{{ media_url }}products/Melk.jpg" alt="{{ product.name }}">
+            </div>
+            <div class="highlight-content">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <p class="highlight-price">${{ product.price }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="deal-section">
+    <div class="section-header">
+        <span class="eyebrow">Limited time deals</span>
+        <h2>High-impact desktop upgrades at exclusive prices.</h2>
+    </div>
+    {% if limited_deal %}
+    <div class="deal-panel">
+        <div class="deal-copy">
+            <p class="eyebrow">Flash sale</p>
+            <h3>{{ limited_deal.name }}</h3>
+            <p>{{ limited_deal.description }}</p>
+            <p class="deal-price">Only ${{ limited_deal.price }}</p>
+            <a href="{% url 'store:product_detail' slug=limited_deal.slug %}" class="btn btn-primary">Grab the deal</a>
+        </div>
+        <div class="deal-image-wrap">
+            <img src="{{ media_url }}{{ limited_deal.image }}" alt="{{ limited_deal.name }}">
+        </div>
+    </div>
+    {% endif %}
+
+</section>
+
+<section class="featured-section" id="featured">
+    <div class="section-header">
+        <span class="eyebrow">Featured products</span>
+        <h2>Engineered for performance. Crafted for attention.</h2>
+    </div>
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card">
+            <div class="product-image-wrap">
+                <img src="{{ media_url }}{{ product.image }}" alt="{{ product.name }}">
+            </div>
+            <div class="product-content">
+                <p class="product-category">Featured</p>
+                <h3>{{ product.name }}</h3>
+                <p class="product-price">${{ product.price }}</p>
+                <p>{{ product.description }}</p>
+                <a href="{% url 'store:product_detail' slug=product.slug %}" class="btn btn-card">View details</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

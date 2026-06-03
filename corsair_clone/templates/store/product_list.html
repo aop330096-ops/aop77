@@ -1,0 +1,30 @@
+{% extends "store/base.html" %}
+
+{% block title %}Products · Corsair Clone{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Product collection</p>
+        <h1>Premium gaming hardware in a powerful lineup.</h1>
+        <p class="page-intro">Browse our curated components and system essentials built for competitive rigs.</p>
+    </div>
+</section>
+
+<section class="product-grid product-grid--wide">
+    {% for product in products %}
+    <article class="product-card">
+        <div class="product-image-wrap">
+            <img src="{{ media_url }}{{ product.image }}" alt="{{ product.name }}">
+        </div>
+        <div class="product-content">
+            <p class="product-category">Gaming Hardware</p>
+            <h3>{{ product.name }}</h3>
+            <p class="product-price">${{ product.price }}</p>
+            <p>{{ product.description }}</p>
+            <a href="{% url 'store:product_detail' slug=product.slug %}" class="btn btn-card">View details</a>
+        </div>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}

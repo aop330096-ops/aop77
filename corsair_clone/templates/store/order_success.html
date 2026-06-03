@@ -1,0 +1,34 @@
+{% extends 'store/base.html' %}
+{% block title %}Order Success - Corsair Clone{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="success-card">
+    <div style="font-size: 4rem; color: var(--accent); margin-bottom: 20px;">✓</div>
+    <h1>Order Confirmed!</h1>
+    <p style="color: var(--muted); font-size: 1.1rem;">Thank you, {{ order.customer_name }}. Your order is being processed.</p>
+    
+    <div class="success-details">
+      <p><span>Order ID:</span> <strong>{{ order.order_id }}</strong></p>
+      <p><span>Date:</span> <span>{{ order.created_at|date:"F d, Y, h:i A" }}</span></p>
+      <p><span>Status:</span> <span style="text-transform: uppercase; color: var(--accent); font-weight: 700;">{{ order.get_order_status_display }}</span></p>
+      
+      <ul>
+        {% for item in order.items.all %}
+          <li>
+            <span>{{ item.quantity }} x {% if item.product %}{{ item.product.name }}{% else %}Deleted Product{% endif %}</span>
+            <span>${{ item.total_price }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      
+      <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px; margin-top: 16px; font-weight: 700; font-size: 1.25rem;">
+        <span>Total Paid:</span>
+        <span style="color: var(--accent);">${{ order.total_amount }}</span>
+      </div>
+    </div>
+    
+    <p style="color: var(--muted); margin-bottom: 32px;">We've sent a confirmation email to <strong>{{ order.email }}</strong>.</p>
+    <a href="{% url 'store:home' %}" class="btn btn-primary">Continue Shopping</a>
+  </div>
+</div>
+{% endblock %}

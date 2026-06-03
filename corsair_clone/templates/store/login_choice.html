@@ -1,0 +1,26 @@
+{% extends "store/base.html" %}
+
+{% block title %}Login · Corsair Clone{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Authentication</p>
+        <h1>Choose your access path</h1>
+        <p class="page-intro">Select whether you want to continue as a normal user or access the admin portal.</p>
+    </div>
+</section>
+
+<section class="auth-grid">
+    <article class="role-card role-card--user">
+        <h2>User Access</h2>
+        <p>Login or sign up for your account to explore products, save preferences, and checkout faster.</p>
+        <a href="{% url 'store:user_login' %}" class="btn btn-primary">User Login / Signup</a>
+    </article>
+    <article class="role-card role-card--admin">
+        <h2>Admin Access</h2>
+        <p>Administrators can sign in to manage inventory, view orders, and configure the store backend.</p>
+        <a href="{% url 'store:admin_login' %}" class="btn btn-secondary">Admin Login</a>
+    </article>
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "store/base.html" %}
+
+{% block title %}{{ product.name }} · Corsair Clone{% endblock %}
+
+{% block content %}
+<section class="product-detail-panel">
+    <div class="detail-grid">
+        <div class="detail-image">
+            <div class="detail-image-frame">
+                <img src="{{ media_url }}{{ product.image }}" alt="{{ product.name }}">
+            </div>
+        </div>
+        <div class="detail-copy">
+            <p class="eyebrow">Product spotlight</p>
+            <h1>{{ product.name }}</h1>
+            <p class="detail-price">${{ product.price }}</p>
+            <p class="detail-description">{{ product.description }}</p>
+            <div class="detail-actions">
+                {% if product.id %}
+                <form action="{% url 'store:add_to_cart' product.id %}" method="post" style="display:inline">
+                    {% csrf_token %}
+                    <button class="btn btn-primary">Add to Cart</button>
+                </form>
+                {% else %}
+                <a href="#" class="btn btn-primary">Buy Now</a>
+                {% endif %}
+                <a href="{% url 'store:product_list' %}" class="btn btn-secondary">Browse all products</a>
+            </div>
+            <div class="detail-specs">
+                {% for feature in product.highlights %}
+                <div>
+                    <span>{{ feature }}</span>
+                    <p>Designed for elite performance and a premium rig aesthetic.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
